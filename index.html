@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Controle simples de contas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    .totais {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .totais p {
+      margin: 4px 0;
+      font-size: 16px;
+    }
+
+    .destaque {
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #2563eb;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    th {
+      background: #f9fafb;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Controle Simples de Contas</h1>
+
+  <!-- DESPESAS FIXAS / VARIÁVEIS -->
+  <h2>Despesas do mês</h2>
+
+  <div class="grid">
+    <label for="aluguel">Aluguel:</label>
+    <input type="number" id="aluguel" step="0.01" placeholder="0,00">
+    <span>R$</span>
+
+    <label for="agua">Água:</label>
+    <input type="number" id="agua" step="0.01" placeholder="0,00">
+    <span>R$</span>
+
+    <label for="luz">Luz / Força:</label>
+    <input type="number" id="luz" step="0.01" placeholder="0,00">
+    <span>R$</span>
+
+    <label for="cartao">Cartão de crédito:</label>
+    <input type="number" id="cartao" step="0.01" placeholder="0,00">
+    <span>R$</span>
+
+    <label for="sogro">Pagar meu sogro:</label>
+    <input type="number" id="sogro" step="0.01" placeholder="0,00">
+    <span>R$</span>
+
+    <label for="outras">Outras contas:</label>
+    <input type="number" id="outras" step="0.01" placeholder="0,00">
+    <span>R$</span>
+  </div>
+
+  <!-- DINHEIRO GUARDADO -->
+  <div class="section">
+    <h2>Dinheiro guardado</h2>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr 0.7fr;">
+      <input type="text" id="descricaoGuardado" placeholder="Ex: Cofrinho, Poupança, PIX separado...">
+      <input type="number" id="valorGuardado" step="0.01" placeholder="0,00">
+      <button class="btn" onclick="adicionarGuardado()">Adicionar</button>
+    </div>
+
+    <table id="tabelaGuardado">
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th class="right">Valor (R$)</th>
+        </tr>
+      </thead>
+      <tbody>
+      <!-- Linhas serão adicionadas via JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TOTAIS -->
+  <div class="totais">
+    <p>Total de despesas: <span class="destaque" id="totalDespesas">R$ 0,00</span></p>
+    <p>Total de dinheiro guardado: <span class="destaque" id="totalGuardado">R$ 0,00</span></p>
+    <p>Saldo (guardado - despesas): <span class="destaque" id="saldoFinal">R$ 0,00</span></p>
+  </div>
+</div>
+
+<script>
+  // Formata número para R$ 0,00
+  function formatar(valor) {
+    return 'R$ ' + valor.toFixed(2).replace('.', ',');
+  }
+
+  // Soma as despesas sempre que algo mudar
+  function atualizarDespesas() {
+    const campos = ['aluguel', 'agua', 'luz', 'cartao', 'sogro', 'outras'];
+    let total = 0;
+
+    campos.forEach(id => {
+      const v = parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
+      total += v;
+    });
+
+    document.getElementById('totalDespesas').textContent = formatar(total);
+    calcularSaldo();
+  }
+
+  // Armazena os valores de dinheiro guardado
+  const listaGuardado = [];
+
+  function adicionarGuardado() {
+    const descInput = document.getElementById('descricaoGuardado');
+    const valorInput = document.getElementById('valorGuardado');
+
+    const desc = descInput.value.trim() || 'Sem descrição';
+    const valor = parseFloat(valorInput.value.replace(',', '.')) || 0;
+
+    if (valor <= 0) {
+      alert('Informe um valor maior que zero para guardar.');
+      return;
+    }
+
+    listaGuardado.push({ descricao: desc, valor: valor });
+
+    // Limpar campos
+    descInput.value = '';
+    valorInput.value = '';
+
+    atualizarTabelaGuardado();
+    atualizarTotalGuardado();
+  }
+
+  function atualizarTabelaGuardado() {
+    const tbody = document.querySelector('#tabelaGuardado tbody');
+    tbody.innerHTML = '';
+
+    listaGuardado.forEach(item => {
+      const tr = document.createElement('tr');
+
+      const tdDesc = document.createElement('td');
+      tdDesc.textContent = item.descricao;
+
+      const tdValor = document.createElement('td');
+      tdValor.textContent = formatar(item.valor);
+      tdValor.classList.add('right');
+
+      tr.appendChild(tdDesc);
+      tr.appendChild(tdValor);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function atualizarTotalGuardado() {
+    let total = 0;
+    listaGuardado.forEach(item => total += item.valor);
+
+    document.getElementById('totalGuardado').textContent = formatar(total);
+    calcularSaldo();
+  }
+
+  function calcularSaldo() {
+    const totalDespesasTexto = document.getElementById('totalDespesas').textContent;
+    const totalGuardadoTexto = document.getElementById('totalGuardado').textContent;
+
+    const totalDespesas = parseFloat(totalDespesasTexto.replace('R$','').replace('.','').replace(',','.')) || 0;
+    const totalGuardado = parseFloat(totalGuardadoTexto.replace('R$','').replace('.','').replace(',','.')) || 0;
+
+    const saldo = totalGuardado - totalDespesas;
+    document.getElementById('saldoFinal').textContent = formatar(saldo);
+  }
+
+  // Ligar eventos nos campos de despesa
+  ['aluguel','agua','luz','cartao','sogro','outras'].forEach(id => {
+    document.getElementById(id).addEventListener('input', atualizarDespesas);
+  });
+</script>
+</body>
+</html>
