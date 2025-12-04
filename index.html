@@ -152,23 +152,30 @@
 <input type="number" id="outras" step="0.01" placeholder="0,00">
 <span>R$</span>
     
-  <div class="section">
+ <div class="section">
   <h2>Dinheiro guardado</h2>
 
-  <div class="grid" style="grid-template-columns: 2fr 1fr 0.7fr;">
-    <input type="text" id="descricaoGuardado" placeholder="Ex: Cofrinho, Poupança, PIX separado...">
+  <div>
+    <input type="text" id="descricaoGuardado" placeholder="Descrição (opcional)">
     <input type="number" id="valorGuardado" step="0.01" placeholder="0,00">
-    <button class="btn" type="button" onclick="adicionarGuardado()">Adicionar</button>
+    <button type="button" onclick="adicionarGuardado()">Adicionar</button>
   </div>
 
   <table id="tabelaGuardado">
     <thead>
       <tr>
         <th>Descrição</th>
-        <th class="right">Valor (R$)</th>
+        <th>Valor (R$)</th>
       </tr>
     </thead>
     <tbody>
+      <!-- linhas criadas via JS -->
+    </tbody>
+  </table>
+
+  <p>Total guardado: <span id="totalGuardado">R$ 0,00</span></p>
+</div>
+    
       <!-- Linhas vão aparecer aqui via JavaScript -->
     </tbody>
   </table>
@@ -279,5 +286,6 @@
 </body>
 
 </html>
+
 
 
