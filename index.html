@@ -110,10 +110,21 @@
 <label for="netflix">Netflix:</label>
 <input type="number" id="netflix" step="0.01" placeholder="0,00">
 <span>R$</span>
+    
+    <h2>Salários</h2>
+
+    <label for="salarioMeu">Meu salário:</label>
+    <input type="number" id="salarioMeu" step="0.01" placeholder="0,00">
+    <span>R$</span>
+
+    <label for="salarioEsposa">Salário da minha esposa:</label>
+    <input type="number" id="salarioEsposa" step="0.01" placeholder="0,00">
+    <span>R$</span>
+    
   <div class="totais">
     <p>Total de despesas: <span class="destaque" id="totalDespesas">R$ 0,00</span></p>
   </div>
-
+    
 <script>
   // Formata valor em R$ 0,00
   function formatar(valor) {
@@ -143,5 +154,6 @@
 </script>
 </body>
 </html>
+
 
 
