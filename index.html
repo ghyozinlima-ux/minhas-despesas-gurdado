@@ -159,61 +159,6 @@
       <span class="destaque" id="saldoFinal">R$ 0,00</span>
     </p>
   </div>
-</div>
-
-<script>
-  // Formata número para R$ 0,00
-  function formatar(valor) {
-    return 'R$ ' + valor.toFixed(2).replace('.', ',');
-  }
-
-  // Lista dos IDs dos campos de despesa
-  const camposDespesas = [
-    'aluguel',
-    'agua',
-    'luz',
-    'cartao',
-    'sogro',
-    'sogra',
-    'outras',
-    'internet',
-    'plano',
-    'netflix'
-  ];
-
-  // Soma as despesas
-  function atualizarDespesas() {
-    let total = 0;
-
-    camposDespesas.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const v = parseFloat((el.value || '0').replace(',', '.')) || 0;
-      total += v;
-    });
-
-    document.getElementById('totalDespesas').textContent = formatar(total);
-    return total;
-  }
-
-  // Soma os salários
-  function atualizarSalarios() {
-    const meu = parseFloat((document.getElementById('salarioMeu').value || '0').replace(',', '.')) || 0;
-    const esposa = parseFloat((document.getElementById('salarioEsposa').value || '0').replace(',', '.')) || 0;
-    const total = meu + esposa;
-
-    document.getElementById('totalSalarios').textContent = formatar(total);
-    return total;
-  }
-
-  // Calcula tudo de uma vez (chamado ao clicar no botão)
-  function calcularTudo() {
-    const totalSalarios = atualizarSalarios();
-    const totalDespesas = atualizarDespesas();
-    const saldo = totalSalarios - totalDespesas;
-
-    document.getElementById('saldoFinal').textContent = formatar(saldo);
-  }
-</script>
 </body>
 </html>
+
