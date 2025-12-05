@@ -1,73 +1,20 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Minhas despesas</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    h1, h2 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    label {
-      font-weight: 600;
-    }
-
-    input[type="number"] {
-      width: 100%;
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-
-    .totais {
-      margin-top: 20px;
-      padding: 10px;
-      background: #f9fafb;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-    }
-
-    .totais p {
-      margin: 4px 0;
-      font-size: 16px;
-    }
-
-    .destaque {
-      font-weight: bold;
-      color: #111827;
-    }
-  </style>
-</head>
-<body>
 <div class="container">
   <h1>Controle simples de despesas</h1>
 
+  <!-- BLOCO DE SALÁRIOS -->
+  <h2>Salários</h2>
+
+  <div class="grid">
+    <label for="salarioMeu">Meu salário:</label>
+    <input type="number" id="salarioMeu" step="0.01" placeholder="0,00">
+    <span>R$</span>
+
+    <label for="salarioEsposa">Salário da minha esposa:</label>
+    <input type="number" id="salarioEsposa" step="0.01" placeholder="0,00">
+    <span>R$</span>
+  </div>
+
+  <!-- BLOCO DE DESPESAS -->
   <h2>Despesas do mês</h2>
 
   <div class="grid">
@@ -98,64 +45,31 @@
     <label for="outras">Outras contas:</label>
     <input type="number" id="outras" step="0.01" placeholder="0,00">
     <span>R$</span>
-  
-<label for="internet">Internet de casa:</label>
-<input type="number" id="internet" step="0.01" placeholder="0,00">
-<span>R$</span>
 
-<label for="plano">Meu plano (celular):</label>
-<input type="number" id="plano" step="0.01" placeholder="0,00">
-<span>R$</span>
-
-<label for="netflix">Netflix:</label>
-<input type="number" id="netflix" step="0.01" placeholder="0,00">
-<span>R$</span>
-    
-    <h2>Salários</h2>
-
-    <label for="salarioMeu">Meu salário:</label>
-    <input type="number" id="salarioMeu" step="0.01" placeholder="0,00">
+    <!-- se você já tiver internet/plano/netflix, deixe aqui também -->
+    <label for="internet">Internet de casa:</label>
+    <input type="number" id="internet" step="0.01" placeholder="0,00">
     <span>R$</span>
 
-    <label for="salarioEsposa">Salário da minha esposa:</label>
-    <input type="number" id="salarioEsposa" step="0.01" placeholder="0,00">
+    <label for="plano">Meu plano (celular):</label>
+    <input type="number" id="plano" step="0.01" placeholder="0,00">
     <span>R$</span>
-  <div>
-    
-  <div class="totais">
-    <p>Total de despesas: <span class="destaque" id="totalDespesas">R$ 0,00</span></p>
+
+    <label for="netflix">Netflix:</label>
+    <input type="number" id="netflix" step="0.01" placeholder="0,00">
+    <span>R$</span>
   </div>
-    
-<script>
-  // Formata valor em R$ 0,00
-  function formatar(valor) {
-    return 'R$ ' + valor.toFixed(2).replace('.', ',');
-  }
 
-  // IDs dos campos de despesas
-  const camposDespesas = ['aluguel', 'agua', 'luz', 'cartao', 'sogro', 'sogra', 'outras'];
-
-  // Atualiza o total de despesas
-  function atualizarDespesas() {
-    let total = 0;
-
-    camposDespesas.forEach(id => {
-      const el = document.getElementById(id);
-      const v = parseFloat((el.value || '0').replace(',', '.')) || 0;
-      total += v;
-    });
-
-    document.getElementById('totalDespesas').textContent = formatar(total);
-  }
-
-  // Quando digitar em qualquer campo, recalcula
-  camposDespesas.forEach(id => {
-    document.getElementById(id).addEventListener('input', atualizarDespesas);
-  });
-</script>
-</body>
-</html>
-
-
-
-
+  <!-- TOTAIS E SALDO -->
+  <div class="totais">
+    <p>Total de salários: 
+      <span class="destaque" id="totalSalarios">R$ 0,00</span>
+    </p>
+    <p>Total de despesas: 
+      <span class="destaque" id="totalDespesas">R$ 0,00</span>
+    </p>
+    <p>Saldo final (salários - despesas): 
+      <span class="destaque" id="saldoFinal">R$ 0,00</span>
+    </p>
+  </div>
+</div>
