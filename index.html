@@ -1,76 +1,83 @@
-<div class="container">
-  <h1>Controle simples de despesas</h1>
+<script>
+  // Formata valor em R$ 0,00
+  function formatar(valor) {
+    return 'R$ ' + valor.toFixed(2).replace('.', ',');
+  }
 
-  <!-- BLOCO DE SALÁRIOS -->
-  <h2>Salários</h2>
+  // ---- LISTA DE CAMPOS DE DESPESA (ajuste se tiver mais ou menos) ----
+  const camposDespesas = [
+    'aluguel',
+    'agua',
+    'luz',
+    'cartao',
+    'sogro',
+    'sogra',
+    'outras',
+    'internet',
+    'plano',
+    'netflix'
+  ];
 
-  <div class="grid">
-    <label for="salarioMeu">Meu salário:</label>
-    <input type="number" id="salarioMeu" step="0.01" placeholder="0,00">
-    <span>R$</span>
+  // Soma as despesas
+  function atualizarDespesas() {
+    let total = 0;
 
-    <label for="salarioEsposa">Salário da minha esposa:</label>
-    <input type="number" id="salarioEsposa" step="0.01" placeholder="0,00">
-    <span>R$</span>
-  </div>
+    camposDespesas.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return; // se não existir, ignora
+      const v = parseFloat((el.value || '0').replace(',', '.')) || 0;
+      total += v;
+    });
 
-  <!-- BLOCO DE DESPESAS -->
-  <h2>Despesas do mês</h2>
+    document.getElementById('totalDespesas').textContent = formatar(total);
+    atualizarSaldoFinal(); // recalcula o saldo
+  }
 
-  <div class="grid">
-    <label for="aluguel">Aluguel:</label>
-    <input type="number" id="aluguel" step="0.01" placeholder="0,00">
-    <span>R$</span>
+  // Soma os salários
+  function atualizarSalarios() {
+    const meuEl = document.getElementById('salarioMeu');
+    const esposaEl = document.getElementById('salarioEsposa');
 
-    <label for="agua">Água:</label>
-    <input type="number" id="agua" step="0.01" placeholder="0,00">
-    <span>R$</span>
+    const meu = parseFloat(((meuEl && meuEl.value) || '0').replace(',', '.')) || 0;
+    const esposa = parseFloat(((esposaEl && esposaEl.value) || '0').replace(',', '.')) || 0;
 
-    <label for="luz">Luz / Força:</label>
-    <input type="number" id="luz" step="0.01" placeholder="0,00">
-    <span>R$</span>
+    const total = meu + esposa;
+    document.getElementById('totalSalarios').textContent = formatar(total);
+    atualizarSaldoFinal(); // recalcula o saldo
+  }
 
-    <label for="cartao">Cartão de crédito:</label>
-    <input type="number" id="cartao" step="0.01" placeholder="0,00">
-    <span>R$</span>
+  // Calcula saldo final = salários - despesas
+  function atualizarSaldoFinal() {
+    const totalSalariosTexto = document.getElementById('totalSalarios').textContent;
+    const totalDespesasTexto = document.getElementById('totalDespesas').textContent;
 
-    <label for="sogro">Pagar meu sogro:</label>
-    <input type="number" id="sogro" step="0.01" placeholder="0,00">
-    <span>R$</span>
+    const totalSalarios = parseFloat(totalSalariosTexto.replace('R$','').replace('.','').replace(',','.')) || 0;
+    const totalDespesas = parseFloat(totalDespesasTexto.replace('R$','').replace('.','').replace(',','.')) || 0;
 
-    <label for="sogra">Pagar minha sogra:</label>
-    <input type="number" id="sogra" step="0.01" placeholder="0,00">
-    <span>R$</span>
+    const saldo = totalSalarios - totalDespesas;
+    document.getElementById('saldoFinal').textContent = formatar(saldo);
+  }
 
-    <label for="outras">Outras contas:</label>
-    <input type="number" id="outras" step="0.01" placeholder="0,00">
-    <span>R$</span>
+  // Quando a página carregar, ligar os eventos
+  window.addEventListener('load', function () {
+    // liga nos campos de despesa
+    camposDespesas.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', atualizarDespesas);
+      }
+    });
 
-    <!-- se você já tiver internet/plano/netflix, deixe aqui também -->
-    <label for="internet">Internet de casa:</label>
-    <input type="number" id="internet" step="0.01" placeholder="0,00">
-    <span>R$</span>
+    // liga nos campos de salário
+    ['salarioMeu', 'salarioEsposa'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', atualizarSalarios);
+      }
+    });
 
-    <label for="plano">Meu plano (celular):</label>
-    <input type="number" id="plano" step="0.01" placeholder="0,00">
-    <span>R$</span>
-
-    <label for="netflix">Netflix:</label>
-    <input type="number" id="netflix" step="0.01" placeholder="0,00">
-    <span>R$</span>
-  </div>
-
-  <!-- TOTAIS E SALDO -->
-  
- <div class="totais">
-  <p>Total de salários: 
-    <span class="destaque" id="totalSalarios">R$ 0,00</span>
-  </p>
-  <p>Total de despesas: 
-    <span class="destaque" id="totalDespesas">R$ 0,00</span>
-  </p>
-  <p>Saldo final (salários - despesas): 
-    <span class="destaque" id="saldoFinal">R$ 0,00</span>
-  </p>
-</div>
-
+    // inicializa tudo em 0
+    atualizarDespesas();
+    atualizarSalarios();
+  });
+</script>
